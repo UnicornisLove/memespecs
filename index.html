@@ -40,7 +40,6 @@
         .pinky-pie-accordion {
             --bs-accordion-btn-bg: #ff8bef;
             --bs-accordion-active-bg: #ff8bef;
-            background-color: rgba(255, 139, 239, 0.25);
         }
 
         .pinky-pie-accordion-body {
@@ -88,8 +87,8 @@
                     <b>Filters</b>
                 </button>
             </h2>
-            <div id="collapseFilters" class="accordion-collapse collapse show" data-bs-parent="#accordionFilters">
-                <div class="accordion-body pinky-pie-accordion-body">
+            <div id="collapseFilters" class="accordion-collapse collapse show pinky-pie-accordion-body" data-bs-parent="#accordionFilters">
+                <div class="accordion-body">
                     <div class="form-floating mb-3">
                         <input type="text" id="searchMemeticsSpecs" class="filterInput form-control" placeholder="Activated Carbon Filter" onkeyup="filterTable()">
                         <label for="searchMemeticsSpecs">Find Memetics Specs</label>
