@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memetics Specs</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 1200px; margin: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #ff8bef; }
+        #adminPanel { display: none; margin-top: 10px; }
+        .filterInput { margin-bottom: 10px; padding: 5px; width: 100%; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+    <div class="container">
+        <center><h1>Unicornis</h1>
+        <h2>Memetics Specs</h2></center>
+        <input type="text" id="searchMemeticsSpecs" class="filterInput" placeholder="Find Memetics Specs" onkeyup="filterTable()">
+        <input type="text" id="searchType" class="filterInput" placeholder="Find Type" onkeyup="filterTable()">
+        <input type="text" id="searchSpecialization" class="filterInput" placeholder="Find Specialization" onkeyup="filterTable()">
+        <input type="text" id="searchContactPerson" class="filterInput" placeholder="Find Contact Person" onkeyup="filterTable()">
+    
+        <table>
+            <thead>
+                <tr>
+                    <th>Memetics Specs</th>
+                    <th>Type</th>
+                    <th>Specialization</th>
+                    <th>Sub-specialization</th>
+                    <th>Specialization Effects</th>
+                    <th>Level</th>
+                    <th>Contact Person</th>
+                    <th>Add Person</th>
+                </tr>
+            </thead>
+            <tbody id="list"></tbody>
+        </table>
+    </div>
+    <script>
+
+const { createClient } = supabase
+        const _supabaseUrl = 'https://zvfmksulzvdlvhjswdlz.supabase.co'; // Replace with your actual Supabase URL
+        const _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2Zm1rc3VsenZkbHZoanN3ZGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2NTI2MjEsImV4cCI6MjA1NjIyODYyMX0.cPp5nHNYXNZI7kQ-kZcicpjzVLyq2NejBMpqcg10XRQ'; // Replace with your actual Supabase key
+        const _supabase = createClient(_supabaseUrl, _supabaseKey);
+
+
+        function createTableRow(memeticsSpecs = '', type = '', specialization = '', subSpecialization = '', specializationEffects = '', level = '', contact = '') {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td contenteditable="false">${memeticsSpecs || ''}</td>
+                             <td contenteditable="false">${type || ''}</td>
+                             <td contenteditable="false">${specialization || ''}</td>
+                             <td contenteditable="false">${subSpecialization || ''}</td>
+                             <td contenteditable="false">${specializationEffects || ''}</td>
+                             <td contenteditable="false">${level || ''}</td>
+                             <td contenteditable="false">${contact || ''}</td>
+                             <td><button class="add-button" onclick="addPerson(this)">Add</button></td>`;
+            document.getElementById('list').appendChild(row);
+        }
+
+        async function addPerson(button) {
+            let name = prompt("Add nickname: ");
+            if (name) {
+                let contactCell = button.parentElement.previousElementSibling;
+                contactCell.textContent += contactCell.textContent ? ", " + name : name;
+                await savePerson(contactCell.textContent, button);
+                filterTable(); // Call filterTable to update the filter dynamically
+            }
+        }
+
+        async function savePerson(contact, button) {
+            const row = button.parentElement.parentElement;
+            const data = {
+             /*   memeticsSpecs: row.cells[0].textContent,
+                type: row.cells[1].textContent,
+                specialization: row.cells[2].textContent,
+                subSpecialization: row.cells[3].textContent,
+                specializationEffects: row.cells[4].textContent,
+                level: row.cells[5].textContent, */
+                contact: contact
+            };
+
+            const { error } = await _supabase
+            .from('entries')
+            .update([data])
+            .eq('memeticsSpecs', row.cells[0].textContent);
+            if (error) {
+                console.error(error);
+                return;
+            }
+     }
+
+
+        function toggleEditing() {
+            isEditing = !isEditing;
+            document.querySelectorAll("td").forEach(td => {
+                td.setAttribute("contenteditable", isEditing);
+            });
+            document.getElementById("editButton").textContent = isEditing ? "Save" : "Edit";
+        }
+
+        function filterTable() {
+            let searchMemeticsSpecs = document.getElementById("searchMemeticsSpecs").value.toLowerCase();
+            let searchType = document.getElementById("searchType").value.toLowerCase();
+            let searchSpecialization = document.getElementById("searchSpecialization").value.toLowerCase();
+            let searchContactPerson = document.getElementById("searchContactPerson").value.toLowerCase();
+            
+            let rows = document.getElementById("list").getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                let cells = rows[i].getElementsByTagName("td");
+                let memeticsSpecsText = cells[0] ? cells[0].textContent.toLowerCase() : "";
+                let typeText = cells[1] ? cells[1].textContent.toLowerCase() : "";
+                let specializationText = cells[2] ? cells[2].textContent.toLowerCase() : "";
+                let contactPersonText = cells[6] ? cells[6].textContent.toLowerCase() : "";
+
+                let match = memeticsSpecsText.includes(searchMemeticsSpecs) &&
+                            typeText.includes(searchType) &&
+                            specializationText.includes(searchSpecialization) &&
+                            contactPersonText.includes(searchContactPerson);
+
+                rows[i].style.display = match ? "" : "none";
+            }
+        }
+
+        async function loadDatabase() {
+            const { data, error } = await _supabase.from('entries').select('*').order('level', {ascending: true}).order('memeticsSpecs', {ascending: true});
+            if (error) {
+                console.error(error);
+                return;
+            }
+            data.forEach(row => createTableRow(row.memeticsSpecs, row.type, row.specialization, row.subSpecialization, row.specializationEffects, row.level, row.contact));
+}
+
+        document.addEventListener("DOMContentLoaded", async function() {
+            await loadDatabase();
+        });
+    </script>
+</body>
+</html>
