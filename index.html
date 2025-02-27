@@ -37,8 +37,23 @@
             --bs-table-bg: #ff8bef;
         }
 
+        .pinky-pie-accordion {
+            --bs-accordion-btn-bg: #ff8bef;
+            --bs-accordion-active-bg: #ff8bef;
+            background-color: rgba(255, 139, 239, 0.25);
+        }
+
+        .pinky-pie-accordion-body {
+            background-color: rgba(255, 139, 239, 0.25);
+        }
+
         .pinky-pie-button {
-            background-color: #ff8bef;
+            --bs-btn-bg: #ff8bef;
+            --bs-btn-border-color: #ff8bef;
+            --bs-btn-hover-bg: #ffb4ff;
+            --bs-btn-hover-border-color: #ffb4ff;
+            --bs-btn-active-bg: #ffb4ff;
+            --bs-btn-active-border-color: #ffb4ff;
         }
 
         .unicorn {
@@ -65,29 +80,37 @@
 </head>
 <body>
 <div class="container">
-    <div class="px-4 pt-2 my-5 text-center border-bottom">
-        <h1 class="display-4 fw-bold text-body-emphasis">Unicornis <span class="unicorn">🦄</span></h1>
-        <div class="col-lg-6 mx-auto">
-            <p class="lead mb-4">Memetics Specs</p>
+    <img src="logo.JPG" class="img-fluid mb-2" alt="Unicorn">
+    <div class="accordion pinky-pie-accordion mb-2" id="accordionFilters">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="true" aria-controls="collapseFilters">
+                    <b>Filters</b>
+                </button>
+            </h2>
+            <div id="collapseFilters" class="accordion-collapse collapse show" data-bs-parent="#accordionFilters">
+                <div class="accordion-body pinky-pie-accordion-body">
+                    <div class="form-floating mb-3">
+                        <input type="text" id="searchMemeticsSpecs" class="filterInput form-control" placeholder="Activated Carbon Filter" onkeyup="filterTable()">
+                        <label for="searchMemeticsSpecs">Find Memetics Specs</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" id="searchType" class="filterInput form-control" placeholder="Hydro Engineer" onkeyup="filterTable()">
+                        <label for="searchType">Find Type</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" id="searchSpecialization" class="filterInput form-control" placeholder="Management" onkeyup="filterTable()">
+                        <label for="searchSpecialization">Find Specialization</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" id="searchContactPerson" class="filterInput form-control" placeholder="Lunaristic 🥰" onkeyup="filterTable()">
+                        <label for="searchContactPerson">Find Contact Person</label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div>
-        <div class="form-floating mb-3">
-            <input type="text" id="searchMemeticsSpecs" class="filterInput form-control" placeholder="Activated Carbon Filter" onkeyup="filterTable()">
-            <label for="searchMemeticsSpecs">Find Memetics Specs</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" id="searchType" class="filterInput form-control" placeholder="Hydro Engineer" onkeyup="filterTable()">
-            <label for="searchType">Find Type</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" id="searchSpecialization" class="filterInput form-control" placeholder="Management" onkeyup="filterTable()">
-            <label for="searchSpecialization">Find Specialization</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" id="searchContactPerson" class="filterInput form-control" placeholder="Lunaristic 🥰" onkeyup="filterTable()">
-            <label for="searchContactPerson">Find Contact Person</label>
-        </div>
     </div>
 
     <div class="table-responsive">
